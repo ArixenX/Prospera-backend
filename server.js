@@ -3,7 +3,7 @@ const cors = require('cors');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 const app = express();
-app.use(cors()); 
+app.use(cors());
 app.use(express.json());
 
 // Strict configuration bridge setup
@@ -26,15 +26,15 @@ Question: ${message}
         `;
 
         // FIXED: Explicitly string specifications control karne ke liye direct wrapper load
-        const model = genAI.getGenerativeModel({ 
-            model: 'gemini-1.5-flash'
+        const model = genAI.getGenerativeModel({
+            model: "gemini-2.5-flash"
         });
 
         // Hard pipeline routing fix via standard text generation
         const result = await model.generateContent({
             contents: [{ role: 'user', parts: [{ text: contextPrompt }] }]
         });
-        
+
         const response = await result.response;
         res.json({ reply: response.text() });
     } catch (error) {

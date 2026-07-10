@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prospera AI - Premium Wealth Intelligence Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link class="flex-shrink-0" rel="icon" href="data:,">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="text-slate-900 min-h-screen flex flex-col justify-between overflow-x-hidden">
+
+    <header class="sticky top-0 z-50 glass-card navbar-border px-6 py-4 flex-shrink-0">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('landing')">
+                <div class="bg-gradient-to-tr from-blue-500 to-green-500 p-2.5 rounded-xl text-white shadow-sm flex items-center justify-center">
+                    <i data-lucide="cpu" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <span class="font-extrabold text-xl tracking-tight text-gray-900 block leading-none">Prospera <span class="text-blue-500">AI</span></span>
+                    <span class="hidden sm:block text-[9px] text-gray-400 font-bold tracking-widest uppercase mt-1">Personal Financial Assistant</span>
+                </div>
+            </div>
+
+            <nav class="hidden md:flex items-center space-x-8 font-semibold text-sm text-gray-600">
+                <button onclick="navigateTo('landing')" class="nav-link nav-active" id="nav-desktop-landing" data-lang-key="nav_home">Home</button>
+                <button onclick="navigateTo('profile')" class="nav-link" id="nav-desktop-profile" data-lang-key="nav_roadmap">Build Roadmap</button>
+                <button onclick="navigateTo('dashboard')" class="nav-link" id="nav-desktop-dashboard" data-lang-key="nav_dashboard">Dashboard</button>
+                <button onclick="navigateTo('coach')" class="nav-link" id="nav-desktop-coach">AI Coach</button>
+            </nav>
+
+            <div class="flex items-center space-x-4">
+                <select id="langSelector" onchange="changeLanguage(this.value)" class="bg-gray-50 border border-gray-200 text-xs font-bold px-2 py-1.5 rounded-lg focus:outline-none cursor-pointer">
+                    <option value="en">English</option>
+                    <option value="hi">Hindi</option>
+                    <option value="bn">Bengali</option>
+                </select>
+
+                <button onclick="toggleThemeMode()" class="p-2 bg-gray-100 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-xl text-gray-600 transition-all focus:outline-none" id="theme-btn" aria-label="Toggle Theme">
+                    <i data-lucide="moon" class="w-4 h-4" id="theme-icon"></i>
+                </button>
+
+                <span class="hidden lg:inline-block text-[10px] font-bold tracking-wider text-gray-500 border border-gray-200 bg-gray-100 px-3 py-1.5 rounded-full uppercase">IDBI Hackathon '26</span>
+
+                <button onclick="toggleMobileMenu()" id="hamburger-btn" class="md:hidden flex flex-col justify-center items-center w-10 h-10 rounded-xl hover:bg-gray-100/80 transition-all focus:outline-none" aria-label="Toggle Menu">
+                    <span class="hamburger-line" id="line1"></span>
+                    <span class="hamburger-line mt-1.5" id="line2"></span>
+                    <span class="hamburger-line mt-1.5" id="line3"></span>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden absolute left-0 right-0 top-[73px] bg-white border-b border-gray-200/80 flex flex-col p-6 space-y-4 shadow-xl z-40">
+            <button onclick="mobileNavRedirect('landing')" class="mobile-nav-link text-left py-2 font-bold text-gray-800" id="nav-mobile-landing" data-lang-key="nav_home">Home</button>
+            <button onclick="mobileNavRedirect('profile')" class="mobile-nav-link text-left py-2 font-bold text-gray-800" id="nav-mobile-profile" data-lang-key="nav_roadmap">Build Roadmap</button>
+            <button onclick="mobileNavRedirect('dashboard')" class="mobile-nav-link text-left py-2 font-bold text-gray-800" id="nav-mobile-dashboard" data-lang-key="nav_dashboard">Dashboard</button>
+            <button onclick="mobileNavRedirect('coach')" class="mobile-nav-link text-left py-2 font-bold text-gray-800" id="nav-mobile-coach" data-lang-key="nav_coach">AI Coach</button>
+        </div>
+    </header>
+
+    <main id="main-container" class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 relative flex flex-col justify-center">
+
+        <div id="body-overlay" class="hidden fixed inset-0 bg-slate-900/10 backdrop-blur-md z-30 transition-all duration-300" onclick="toggleMobileMenu()"></div>
+
+        <section id="landing" class="page active space-y-20 py-4 w-full">
+            <div class="text-center max-w-4xl mx-auto space-y-6 animate-fade-in-up">
+                <div class="inline-flex items-center space-x-2 bg-blue-50 border border-blue-100 text-blue-500 text-xs font-bold px-4 py-2 rounded-full mb-2 shadow-sm">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                    <span data-lang-key="track_title">Track 1: Digital Wealth Management System</span>
+                </div>
+
+                <h1 id="main-hero-text" class="text-4xl sm:text-6xl lg:text-7xl font-black text-gray-900 tracking-tight pb-4 block" style="line-height: 1.25; letter-spacing: -0.02em;" data-lang-key="hero_heading">
+                    Plan Your Financial Future <br class="hidden sm:inline"> With AI.
+                </h1>
+
+                <p class="text-base sm:text-lg text-gray-500 max-w-2xl mx-auto font-normal leading-relaxed" data-lang-key="hero_subheading">
+                    ProsperaAI helps you analyze your income, expenses, savings, and financial goals to create a personalized financial roadmap.
+                </p>
+                <div class="pt-4">
+                    <button onclick="navigateTo('profile')" class="gradient-btn text-white px-8 py-4 rounded-2xl font-bold text-base flex items-center space-x-3.5 mx-auto">
+                        <span data-lang-key="btn_start">Start Your Financial Journey</span>
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 animate-fade-in-up" style="animation-delay: 150ms;">
+                <div class="feature-card p-6 rounded-2xl border border-gray-100 flex flex-col justify-between bg-white shadow-sm">
+                    <div>
+                        <div class="text-blue-500 bg-blue-50 w-12 h-12 rounded-xl flex items-center justify-center mb-5">
+                            <i data-lucide="map" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-gray-900 mb-2" data-lang-key="feat_title_1">Smart Financial Roadmap</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed" data-lang-key="feat_desc_1">Get custom savings plans that automatically adjust to your monthly financial situation.</p>
+                    </div>
+                </div>
+
+                <div class="feature-card p-6 rounded-2xl border border-gray-100 flex flex-col justify-between bg-white shadow-sm">
+                    <div>
+                        <div class="text-green-500 bg-green-50 w-12 h-12 rounded-xl flex items-center justify-center mb-5">
+                            <i data-lucide="activity" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-gray-900 mb-2" data-lang-key="f2_title">Financial Health Score</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed" data-lang-key="f2_desc">Check your overall financial stability score out of 100 based on your current cash habits.</p>
+                    </div>
+                </div>
+
+                <div class="feature-card p-6 rounded-2xl border border-gray-100 flex flex-col justify-between bg-white shadow-sm">
+                    <div>
+                        <div class="text-purple-600 bg-purple-50 w-12 h-12 rounded-xl flex items-center justify-center mb-5">
+                            <i data-lucide="piggy-bank" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-gray-900 mb-2" data-lang-key="f3_title">Savings Planner</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed" data-lang-key="f3_desc">Track your variable monthly spending trends cleanly and discover new ways to save.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="profile" class="page space-y-8 max-w-3xl mx-auto py-2 w-full">
+            <div class="space-y-1">
+                <h2 class="text-3xl font-extrabold tracking-tight text-gray-900" data-lang-key="form_main_title">Set Up Your Plan</h2>
+                <p class="text-gray-500 text-sm" data-lang-key="form_main_desc">Provide your basic financial details below to generate your personalized planning dashboard.</p>
+            </div>
+
+            <form id="profileForm" onsubmit="generateRoadmap(event)" class="glass-card rounded-3xl p-6 sm:p-10 space-y-8 border border-gray-200/80 shadow-lg animate-fade-in-up">
+                <div class="space-y-4">
+                    <h3 class="text-xs font-bold uppercase tracking-widest text-blue-500 flex items-center"><i data-lucide="user" class="w-4 h-4 mr-2"></i> <span data-lang-key="form_sec1_title">Personal Information</span></h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="relative">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider" data-lang-key="lbl_name">Full Name</label>
+                                <div class="tooltip-trigger" id="tip-name" data-tip="Enter your full legal name as shown on your ID cards.">?</div>
+                            </div>
+                            <input type="text" id="prof-name" required placeholder="e.g. Rahul Verma" class="form-input-element">
+                        </div>
+                        <div class="relative">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider" data-lang-key="lbl_age">Age</label>
+                                <div class="tooltip-trigger" id="tip-age" data-tip="Enter your current age to help the AI decide your investment timeline.">?</div>
+                            </div>
+                            <input type="number" id="prof-age" required min="18" max="100" placeholder="e.g. 25" class="form-input-element">
+                        </div>
+                        <div class="relative">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider" data-lang-key="lbl_job">Occupation</label>
+                                <div class="tooltip-trigger" id="tip-job" data-tip="Type your current job role, profession, or if you are a student.">?</div>
+                            </div>
+                            <input type="text" id="prof-job" required placeholder="e.g. Consultant" class="form-input-element">
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-gray-100">
+
+                <div class="space-y-4">
+                    <h3 class="text-xs font-bold uppercase tracking-widest text-green-500 flex items-center"><i data-lucide="indian-rupee" class="w-4 h-4 mr-2"></i> <span data-lang-key="form_sec2_title">Financial Information (INR)</span></h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="relative">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider" data-lang-key="lbl_income">Monthly Income</label>
+                                <div class="tooltip-trigger" id="tip-income" data-tip="Enter the total monthly salary or profit you take home after taxes.">?</div>
+                            </div>
+                            <input type="number" id="prof-income" required placeholder="Enter net monthly inflow" class="form-input-element">
+                        </div>
+                        <div class="relative">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider" data-lang-key="lbl_expenses">Monthly Expenses</label>
+                                <div class="tooltip-trigger" id="tip-expenses" data-tip="Enter how much you spend each month on rent, food, bills, and lifestyle.">?</div>
+                            </div>
+                            <input type="number" id="prof-expenses" required placeholder="Enter predictable monthly outflows" class="form-input-element">
+                        </div>
+                        <div class="relative">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider" data-lang-key="lbl_savings">Current Savings Pool</label>
+                                <div class="tooltip-trigger" id="tip-savings" data-tip="Enter the total cash you currently have ready in bank accounts.">?</div>
+                            </div>
+                            <input type="number" id="prof-savings" required placeholder="Enter ready liquid savings assets" class="form-input-element">
+                        </div>
+                        <div class="relative">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider" data-lang-key="lbl_loans">Active Debt EMIs (Optional)</label>
+                                <div class="tooltip-trigger" id="tip-loans" data-tip="Enter the total sum of any active loans or credit card EMIs you pay monthly.">?</div>
+                            </div>
+                            <input type="number" id="prof-loans" placeholder="Enter combined liability EMIs" class="form-input-element">
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-gray-100">
+
+                <div class="space-y-4">
+                    <h3 class="text-xs font-bold uppercase tracking-widest text-purple-600 flex items-center"><i data-lucide="target" class="w-4 h-4 mr-2"></i> <span data-lang-key="form_sec3_title">Financial Goals</span></h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="relative">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider" data-lang-key="lbl_goal">Primary Milestone Target</label>
+                                <div class="tooltip-trigger" id="tip-goal" data-tip="Choose the main target you want to save money for right now.">?</div>
+                            </div>
+                            <select id="prof-goal" required class="form-input-element bg-white cursor-pointer">
+                                <option value="" disabled selected data-lang-key="opt_placeholder">Select your main target...</option>
+                                <option value="Buy Bike" data-lang-key="opt_bike">Buy a Motorcycle</option>
+                                <option value="Buy Car" data-lang-key="opt_car">Buy a Car</option>
+                                <option value="Buy House" data-lang-key="opt_house">Buy a House</option>
+                                <option value="Higher Education" data-lang-key="opt_edu">Higher Education</option>
+                                <option value="Emergency Fund" data-lang-key="opt_fund">Build Emergency Fund</option>
+                                <option value="Retirement" data-lang-key="opt_ret">Retirement Planning</option>
+                                <option value="Travel" data-lang-key="opt_travel">International Travel</option>
+                            </select>
+                        </div>
+                        <div class="relative">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider" data-lang-key="lbl_target">Required Target Amount (₹)</label>
+                                <div class="tooltip-trigger" id="tip-target" data-tip="Enter the total budget or target amount needed to complete this goal.">?</div>
+                            </div>
+                            <input type="number" id="prof-target" required placeholder="e.g. 1200000" class="form-input-element">
+                        </div>
+                        <div class="relative">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider" data-lang-key="lbl_timeline">Target Timeline (Months)</label>
+                                <div class="tooltip-trigger" id="tip-timeline" data-tip="Enter how many months from now you want to achieve this goal.">?</div>
+                            </div>
+                            <input type="number" id="prof-timeline" required placeholder="e.g. 36" class="form-input-element">
+                        </div>
+                        <div class="relative">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider" data-lang-key="lbl_risk">Risk Preference Style</label>
+                                <div class="tooltip-trigger" id="tip-risk" data-tip="Low = Safe FD/Bonds, Medium = Balanced Mutual Funds, High = Aggressive Stocks.">?</div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2 mt-1">
+                                <label class="radio-label"><input type="radio" name="risk" value="Low" class="hidden"> <span data-lang-key="risk_low">Low</span></label>
+                                <label class="radio-label"><input type="radio" name="risk" value="Medium" checked class="hidden"> <span data-lang-key="risk_med">Medium</span></label>
+                                <label class="radio-label"><input type="radio" name="risk" value="High" class="hidden"> <span data-lang-key="risk_high">High</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" class="gradient-btn w-full text-white py-4 rounded-2xl font-bold flex items-center justify-center space-x-2 text-base">
+                        <i data-lucide="cpu" class="w-5 h-5"></i>
+                        <span data-lang-key="btn_generate">Generate Your Financial Plan</span>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <section id="loading-screen" class="hidden flex-col items-center justify-center text-center py-24 space-y-6 w-full">
+            <div class="relative w-20 h-20 mx-auto">
+                <div class="spinner-primary absolute inset-0 rounded-full border-4 border-gray-100 border-t-blue-500 animate-spin"></div>
+                <div class="spinner-secondary absolute w-10 h-10 inset-5 rounded-full border-4 border-gray-100 border-b-green-500 animate-spin"></div>
+            </div>
+            <div class="space-y-1.5">
+                <h3 class="font-extrabold text-xl text-gray-900 tracking-tight" data-lang-key="loading_title">Building Your Personalized Plan...</h3>
+                <p class="text-sm text-gray-400 max-w-sm mx-auto" data-lang-key="loading_desc">Analyzing your income, expenses, and savings goal parameters to optimize your investment Suggestions...</p>
+            </div>
+        </section>
+
+        <section id="dashboard" class="page space-y-8 py-2 w-full">
+            <div id="dashboard-empty-state" class="text-center py-16 px-4 space-y-6 max-w-md mx-auto animate-fade-in-up">
+                <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-500 mx-auto border border-blue-100">
+                    <i data-lucide="lock" class="w-6 h-6"></i>
+                </div>
+                <div class="space-y-2">
+                    <h3 class="font-bold text-xl text-gray-900" data-lang-key="dash_locked_title">Dashboard Hidden</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed" data-lang-key="dash_locked_desc">Please fill out your details in the **Build Roadmap** section first to open your custom planning center.</p>
+                </div>
+                <button onclick="navigateTo('profile')" class="gradient-btn text-white px-6 py-3 rounded-xl font-bold text-sm inline-flex items-center space-x-2">
+                    <span data-lang-key="btn_go_profile">Set Up Your Profile</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <div id="dashboard-active-content" class="hidden space-y-8">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h2 class="text-2xl font-black text-gray-900 tracking-tight" data-lang-key="dash_active_title">Your Financial Plan Dashboard</h2>
+                        <p class="text-slate-500 text-sm"><span data-lang-key="dash_active_user">Financial plan created for</span> <span id="dash-user-name" class="font-bold text-blue-600">User</span></p>
+                    </div>
+                    <button onclick="navigateTo('profile')" class="border border-gray-200 bg-white hover:bg-gray-50 shadow-sm px-4 py-2 rounded-xl text-xs font-bold flex items-center space-x-1.5 transition-all">
+                        <i data-lucide="sliders" class="w-3.5 h-3.5 text-gray-400"></i>
+                        <span data-lang-key="btn_edit_input">Change Information</span>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5 animate-fade-in-up">
+                    <div class="glass-card p-6 rounded-2xl border border-gray-100 bg-white shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block" data-lang-key="card1_title">Financial Health Score</span>
+                                <div class="tooltip-trigger" id="tip-card-health" data-tip="A score out of 100 showing how stable your finances are. Higher is safer.">?</div>
+                            </div>
+                            <div class="flex items-baseline space-x-1">
+                                <span id="card-score" class="text-4xl font-black text-gray-900">0</span>
+                                <span class="text-xs text-gray-400 font-bold">/100</span>
+                            </div>
+                        </div>
+                        <div class="w-full bg-gray-100 h-2 rounded-full mt-4 overflow-hidden">
+                            <div id="card-score-progress" class="bg-gradient-to-r from-blue-500 to-green-500 h-full transition-all duration-1000" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-2xl border border-gray-100 bg-white shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block" data-lang-key="card2_title">Recommended Monthly Savings</span>
+                                <div class="tooltip-trigger" id="tip-card-goal" data-tip="The exact amount of money the AI suggests you save every month from your leftover cash.">?</div>
+                            </div>
+                            <span id="card-reco" class="text-3xl font-black text-blue-500">₹0</span>
+                        </div>
+                        <span id="card-potential" class="text-[11px] font-medium text-gray-400 block mt-4">Out of ₹0 leftover cash</span>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-2xl border border-gray-100 bg-white shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block" data-lang-key="card3_title">AI Investment Style</span>
+                                <div class="tooltip-trigger" data-tip="Your chosen investment style preference.">?</div>
+                            </div>
+                            <span id="card-risk" class="text-2xl font-black text-gray-900 block mt-1">Medium</span>
+                        </div>
+                        <div class="mt-2"><span id="card-risk-badge" class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 inline-block">Balanced Plan</span></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="glass-card p-6 rounded-2xl border border-gray-100 lg:col-span-2 space-y-4 bg-white shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-xs text-gray-400 uppercase tracking-wider flex items-center">
+                                <i data-lucide="trending-up" class="w-4 h-4 mr-2 text-blue-500"></i> <span data-lang-key="chart_title">Savings Growth Plan</span>
+                            </h4>
+                            <div class="tooltip-trigger" id="tip-chart" data-tip="The blue line shows your savings growing and compounding month by month.">?</div>
+                        </div>
+                        <div class="relative w-full" style="height: 260px;"><canvas id="projectionChart"></canvas></div>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-2xl border border-gray-100 bg-white shadow-sm space-y-4 flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-extrabold text-sm text-gray-400 uppercase tracking-wider flex items-center">
+                                    <i data-lucide="check-square" class="w-4 h-4 mr-2 text-green-500"></i> <span data-lang-key="plan_title">Your Immediate Action Items</span>
+                                </h3>
+                                <div class="tooltip-trigger" id="tip-plan" data-tip="A dynamic list of immediate clear check-tasks created by the AI.">?</div>
+                            </div>
+                            <div id="priority-checklist" class="space-y-3 pt-1"></div>
+                        </div>
+                        <div class="p-3 bg-blue-50/50 border border-blue-100 rounded-xl text-xs text-blue-600 leading-relaxed">
+                            <strong data-lang-key="ai_tip_lbl">Financial Insights:</strong> <span data-lang-key="ai_tip_desc">Follow these actionable steps to reach your goal target budget on timeline.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-4 animate-fade-in-up">
+                    <div class="flex items-center space-x-2">
+                        <h3 class="font-extrabold text-sm text-gray-400 uppercase tracking-wider flex items-center"><i data-lucide="map" class="w-4 h-4 mr-2 text-blue-500"></i> <span data-lang-key="phases_title">Your Step-by-Step Roadmap</span></h3>
+                        <div class="tooltip-trigger" id="tip-phases" data-tip="Your complete wealth plan broken down step-by-step into clear time-based phases.">?</div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="timeline-box border-t-4 border-t-blue-500 shadow-sm p-4 bg-white rounded-xl">
+                            <span class="text-[9px] font-bold uppercase tracking-widest text-blue-500 block mb-1" data-lang-key="p1_timeline">Months 1–3</span>
+                            <h4 class="font-bold text-sm text-gray-900 mb-1" data-lang-key="p1_title">Build Buffer Fund</h4>
+                            <p id="timeline-p1" class="text-xs text-gray-500 leading-relaxed"></p>
+                        </div>
+                        <div class="timeline-box border-t-4 border-t-purple-500 shadow-sm p-4 bg-white rounded-xl">
+                            <span class="text-[9px] font-bold uppercase tracking-widest text-purple-600 block mb-1" data-lang-key="p2_timeline">Months 4–12</span>
+                            <h4 class="font-bold text-sm text-gray-900 mb-1" data-lang-key="p2_title">Start Regular Investing</h4>
+                            <p id="timeline-p2" class="text-xs text-gray-500 leading-relaxed"></p>
+                        </div>
+                        <div class="timeline-box border-t-4 border-t-amber-500 shadow-sm p-4 bg-white rounded-xl">
+                            <span class="text-[9px] font-bold uppercase tracking-widest text-amber-600 block mb-1" data-lang-key="p3_timeline">Year 2</span>
+                            <h4 class="font-bold text-sm text-gray-900 mb-1" data-lang-key="p3_title">Grow Future Wealth</h4>
+                            <p id="timeline-p3" class="text-xs text-gray-500 leading-relaxed"></p>
+                        </div>
+                        <div class="timeline-box border-t-4 border-t-green-500 shadow-sm p-4 bg-white rounded-xl">
+                            <span class="text-[9px] font-bold uppercase tracking-widest text-green-500 block mb-1" data-lang-key="p4_timeline">Year 3+</span>
+                            <h4 class="font-bold text-sm text-gray-900 mb-1" data-lang-key="p4_title">Reach Goal Target</h4>
+                            <p id="timeline-p4" class="text-xs text-gray-500 leading-relaxed"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="coach" class="page max-w-4xl mx-auto py-2 w-full hidden">
+            <div class="glass-card rounded-2xl border border-gray-200 flex flex-col shadow-lg bg-white overflow-hidden animate-fade-in-up" style="height: 500px; max-height: 500px; min-height: 500px;">
+                
+                <div class="bg-gray-950 text-white px-6 py-4 flex items-center justify-between border-b border-gray-800 flex-shrink-0" style="height: 65px;">
+                    <div class="flex items-center space-x-3">
+                        <div class="bg-gradient-to-tr from-blue-500 to-green-500 p-2 rounded-xl flex items-center justify-center">
+                            <i data-lucide="bot" class="w-4 h-4 text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm tracking-wide leading-none">Prospera AI Assistant</h3>
+                            <span class="text-[10px] text-green-400 flex items-center font-semibold mt-1">
+                                <span class="w-1.5 h-1.5 bg-green-400 rounded-full inline-block mr-1.5 animate-pulse"></span>
+                                Assistant Online
+                            </span>
+                        </div>
+                    </div>
+                    <span class="text-[9px] font-bold text-gray-400 font-mono tracking-widest bg-gray-900 border border-gray-800 px-2.5 py-1 rounded-md">AI AGENT</span>
+                </div>
+
+                <div id="chat-box" class="p-6 bg-gray-50/50 flex-grow overflow-y-auto" style="height: 315px; max-height: 315px;">
+                    <div class="flex items-start space-x-3 max-w-[85%] mb-4">
+                        <div class="w-8 h-8 rounded-xl bg-gray-200 flex items-center justify-center text-slate-700 flex-shrink-0 text-xs font-bold shadow-sm">AI</div>
+                        <div id="chat-welcome-bubble" class="bg-white border border-gray-100 rounded-2xl rounded-tl-none p-4 text-sm shadow-sm text-gray-700 space-y-2 leading-relaxed">
+                            <p>Hi! I'm your AI Financial Coach. I'll help you build a personalized financial plan and answer your financial questions. Select a common query shortcut below to test my insights:</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="suggestion-chip-container" class="px-4 py-2.5 bg-gray-50 border-t border-gray-100 flex gap-2 overflow-x-auto whitespace-nowrap text-xs text-gray-600 custom-scroll select-none items-center flex-shrink-0" style="height: 50px;">
+                    <button onclick="submitSuggestedQuestion('Can I buy a bike next year?')" class="chip-btn" id="chip-q1">"Can I buy a bike next year?"</button>
+                    <button onclick="submitSuggestedQuestion('How much should I save?')" class="chip-btn" id="chip-q2">"How much should I save?"</button>
+                    <button onclick="submitSuggestedQuestion('Should I invest or build an emergency fund first?')" class="chip-btn" id="chip-q3">"Should I invest or build an emergency fund first?"</button>
+                </div>
+
+                <form onsubmit="submitChat(event)" class="p-4 bg-white border-t border-gray-200 flex items-center space-x-3 flex-shrink-0" style="height: 70px;">
+                    <input type="text" id="chat-input" placeholder="Ask anything about your financial plan..." class="flex-grow px-4 py-3 bg-gray-50 border border-gray-200 focus:border-blue-500 rounded-xl text-sm focus:outline-none transition-all">
+                    <button type="submit" class="bg-gray-950 text-white p-3.5 rounded-xl hover:bg-gray-800 transition-all flex-shrink-0 shadow-sm">
+                        <i data-lucide="send" class="w-4 h-4"></i>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="glass-card border-t border-gray-200/50 px-6 py-5 text-center text-xs text-gray-400 flex-shrink-0">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div class="font-medium" id="footer-text">&copy; 2026 Prospera AI Framework. Engineered for IDBI Innovate Hackathon Track 1.</div>
+            <div class="flex space-x-4 font-mono text-[10px] tracking-wider">
+                <span>ID-DWM-TRACK1-V26</span>
+                <span class="text-green-500 font-bold flex items-center"><span class="w-1.5 h-1.5 bg-green-500 rounded-full inline-block mr-1"></span> LIVE DEMO</span>
+            </div>
+        </div>
+    </footer>
+
+    <div id="global-tooltip" class="tooltip-box"></div>
+    <script src="app.js"></script>
+</body>
+</html>
