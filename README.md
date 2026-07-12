@@ -30,21 +30,17 @@ Unlike ordinary calculators that show fake graphs, Prospera AI tells you the hon
 
 
 
-## 🛠️ Tech Stack & Tools
-# 🖥️ Frontend (Client)
+# 🛠️ Tech Stack & Tools
+## 🖥️ Frontend (Client)
 * **Frontend:** `HTML5, CSS3, Tailwind CSS` (for modern UI layout) and `style.css` (for theme overrides).
 * **Chart.js:** To render interactive and beautiful growth graphs.
 * **AI Engine:** Generative AI API (to power the smart multi-lingual AI Coach).
 * **Icons:** Lucide Icons (clean and modern icons).
 
-# ⚙️ Backend (Server - `server.js`)
-* **Runtime Environment:** Node.js with Express framework.
-* **Core API Endpoint:** `POST /api/chat`
-  * **Payload:** Receives the user's secure financial data profile (`userFinancialProfile`) alongside the current chat prompt string.
-  * **Processing:** Securely forwards the tokenized payload to the Generative AI API orchestration layer.
-  * **Language Context Engine:** System prompt anchors ensure the response is auto-translated into Hindi, Bengali, or English based on user input, and formatted strictly in markdown using Indian Rupees (₹).
-* **Security & Middleware:** Implements CORS handlers and JSON parsers for secure local data transactions.
-
+## ⚙️ Backend (Server - `server.js`)
+* **Environment:** Node.js & Express.js (To build the server)
+* **AI Integration:** Google Gen AI SDK (To power the AI Coach chatbot)
+* **Hosting:** Render (Cloud deployment platform)
 
 
 
@@ -74,6 +70,11 @@ _The server will start running locally at http://localhost:3000_
 
 Backend Chat Endpoint:
 The AI Coach connects to the /api/chat route to send financial data and receive localized smart advice.
+
+# Gemini API
+Go to [Google Studio](https://aistudio.google.com/) to get your API Key.
+
+---
 
 >📝 Developer Testing Tip
 _To save you time during testing, app.js has a developer bypass block. It auto-fills the form with demo details and skips directly to the active dashboard within 300ms of page load._
