@@ -137,3 +137,6 @@ _To save you time during testing, app.js has a developer bypass block. It auto-f
 })();
 ```
 (Remember to remove or comment out this automated block from the bottom of app.js before submitting your final project to real users!)
+
+# Author
+[@Aritra](https://github.com/ArixenX)
