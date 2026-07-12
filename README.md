@@ -31,11 +31,20 @@ Unlike ordinary calculators that show fake graphs, Prospera AI tells you the hon
 
 
 ## 🛠️ Tech Stack & Tools
-
-* **Frontend:** HTML5, CSS3, Tailwind CSS (for modern UI layout) and `style.css` (for theme overrides).
-* **Charts:** Chart.js (to render interactive and beautiful growth graphs).
+# 🖥️ Frontend (Client)
+* **Frontend:** `HTML5, CSS3, Tailwind CSS` (for modern UI layout) and `style.css` (for theme overrides).
+* **Chart.js:** To render interactive and beautiful growth graphs.
 * **AI Engine:** Generative AI API (to power the smart multi-lingual AI Coach).
 * **Icons:** Lucide Icons (clean and modern icons).
+
+# ⚙️ Backend (Server - `server.js`)
+* **Runtime Environment:** Node.js with Express framework.
+* **Core API Endpoint:** `POST /api/chat`
+  * **Payload:** Receives the user's secure financial data profile (`userFinancialProfile`) alongside the current chat prompt string.
+  * **Processing:** Securely forwards the tokenized payload to the Generative AI API orchestration layer.
+  * **Language Context Engine:** System prompt anchors ensure the response is auto-translated into Hindi, Bengali, or English based on user input, and formatted strictly in markdown using Indian Rupees (₹).
+* **Security & Middleware:** Implements CORS handlers and JSON parsers for secure local data transactions.
+
 
 
 
@@ -54,13 +63,14 @@ Download/Clone the code:
 ```bash
 git clone https://github.com/ArixenX/Prospera-AI.git
 cd prospera-ai
+
+# Install the exact backend packages needed
+npm install express cors
+
+# Start the Node.js backend server
+node server.js
 ```
-Open the App:
-Since this is built with lightweight frontend technologies (HTML, CSS, JS), you do not need any heavy installation!
-
-Simply double-click index.html to open it directly in your Google Chrome or any modern web browser.
-
-Or run a simple local server if using VS Code (right-click -> Open with Live Server).
+_The server will start running locally at http://localhost:3000_
 
 Backend Chat Endpoint:
 The AI Coach connects to the /api/chat route to send financial data and receive localized smart advice.
