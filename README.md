@@ -1,83 +1,139 @@
-# Prospera AI — Backend Engine [IDBI Bank Hackathon]
+# Prospera AI - Simple & Smart Wealth Assistant 🚀
+> Developed by Aritra Mondal for IDBI Innovate Hackathon '26 (Track 1: Digital Wealth Management System)
 
-This repository contains the robust server-side execution pipeline, secure AI orchestration layer, and fail-safe API routing infrastructure for Prospera AI, engineered for the IDBI Innovate Hackathon under Track 1: Digital Wealth Management System. The application processes structured user financial context payloads and hooks directly into advanced generative models to deliver enterprise-grade digital wealth coaching.
+Prospera AI is a smart personal finance tool that helps bank customers plan their future wealth. It takes your income, monthly expenses, current savings, and financial goals to create a customized, step-by-step savings plan. 
 
-
-🚀 Live Production Deployment
-
-* **Production Hosted URL:** https://prospera-backend-4isr.onrender.com/ (Hosted via Render Web Services)
-* **Core Architecture:** Decoupled serverless container layout processing asynchronous state streams securely isolated from client-side vector exposures.
+Unlike ordinary calculators that show fake graphs, Prospera AI tells you the honest truth about your savings and helps you fix any budget shortages.
 
 
 
-🌟 Premium Features & Technical Scope
+## ✨ Key Features
 
-🔒 Isolated Credentials & Secure Variable Layer
-* The execution architecture isolates the `GEMINI_API_KEY` strictly inside the cloud environment runtime configurations (`process.env`), preventing cross-origin token harvesting or client-side reverse engineering.
+### 1. Honest Goal Tracker (Reality Check)
+* **Real Projections:** If you cannot reach your goal on time with your current savings, the graph will honestly show the gap instead of pretending everything is perfect.
+* **Smart Booster Advice:** It calculates and tells you the exact amount of extra money you need to save every month to meet your goal on time.
 
-🛡️ Fail-Safe Runtime Pipeline & Crash Protection
-* Engineered with advanced runtime logic guards that intercept structural anomalies or missing pipeline keys gracefully, delivering strategic HTTP `500 Config Missing` messages without crashing the core execution thread.
+### 2. Simple Step-by-Step Plan
+* **Phase 1 (Months 1-3):** Automatically calculates how much you need for an Emergency Fund (3 to 6 months of your expenses) and helps you build it first.
+* **Phase 2 (Months 4-12):** Guides you to start investing based on your chosen risk level (Low, Medium, or High).
+* **Phase 3 (Year 3+):** Tracks your progress and dynamically displays whether you have successfully reached your goal or are running short.
 
-🧠 Context-Aware Financial Prompt Engineering
-* Captures client metrics (Income, Expenses, Goal timelines) and packages them into high-context structured semantic layouts, transforming raw API prompts into a private digital financial consultant instance.
+### 3. AI Wealth Coach
+* **Friendly Financial Advice:** A chatbot that understands your personal budget, income, and goals to answer your questions.
+* **Local Languages:** You can talk to the AI Coach in **English, Hindi, or Bengali**.
+* **Clean Formatting:** The AI always replies in easy-to-read bullet points and uses Indian Rupees (₹).
 
-📡 Optimized Cross-Origin Request Handlers
-* Configured with adaptive CORS middleware profiles ensuring seamless, low-latency cross-origin fetch requests from hosted frontend interfaces while keeping endpoints strictly managed.
-
-
-
-📁 Repository Directory Structure
-
-* **server.js** — The centralized server runtime script managing Express initializations, CORS integration filters, secure Gemini API orchestration wrappers, and request payload validation routes.
-* **package.json** — The production dependency manifest locking explicit SDK library versions (`@google/generative-ai`) and runtime execution profiles to secure build environment permanence.
+### 4. Smooth User Experience
+* **Light & Dark Mode:** A stylish theme switcher that changes colors instantly. The buttons and active menu items highlight beautifully in electric blue.
+* **Sleek Mobile Menu:** Fully responsive design with a clean slide-out menu for mobile users.
+* **Instant Loading:** Page transitions and calculations are optimized to load in just **400ms** for a snappy experience.
 
 
-🛠️ Local Configuration & Initialization
 
-To clone, set up, and evaluate the server-side infrastructure execution engine locally inside your development workspace:
+## 🛠️ Tech Stack & Tools
 
-1. Clone this backend repository code asset locally to your environment:
-   
-   ```bash
-   git clone https://github.com/ArixenX/Prospera-backend.git
-   cd Prospera-backend
-2. Install the locked production dependency trees via the node package manager:
+* **Frontend:** HTML5, CSS3, Tailwind CSS (for modern UI layout) and `style.css` (for theme overrides).
+* **Charts:** Chart.js (to render interactive and beautiful growth graphs).
+* **AI Engine:** Generative AI API (to power the smart multi-lingual AI Coach).
+* **Icons:** Lucide Icons (clean and modern icons).
 
-  ```bash
-  npm install
-  ```
 
-  Configure a secure local environment variable token cache (.env) inside the project root directory:
 
- 3. Code snippet
-  ```GEMINI_API_KEY=your_private_google_ai_studio_api_key
-  Launch the local development node server instance on the configured network channel (Port 3000):
-  ```
+## 📁 Project Files
 
-  ```bash
-  node server.js
-  ```
-🌍 Global Production Cloud Deployment Pipeline
+```text
+├── index.html          # Main website dashboard, forms, and tabs
+├── style.css           # Theme colors, layouts, and dark mode styles
+├── app.js              # Calculations, charts, and navigation logic
+├── server.js           # AI response & backend
+└── README.md           # This project guide file
+```
+🚀 How to Run the Project Locally
+Download/Clone the code:
 
-_This backend service build is fully fine-tuned to be compiled on Render with automated semantic integration tracking:_
+```bash
+git clone https://github.com/ArixenX/Prospera-AI.git
+cd prospera-ai
+```
+Open the App:
+Since this is built with lightweight frontend technologies (HTML, CSS, JS), you do not need any heavy installation!
 
-_Access your personal Render cloud management dashboard interface console (dashboard.render.com)._
+Simply double-click index.html to open it directly in your Google Chrome or any modern web browser.
 
-_Trigger the creation workflows for a brand new Web Service resource configuration container mapping._
+Or run a simple local server if using VS Code (right-click -> Open with Live Server).
 
-_Authenticate and select your newly deployed GitHub repository target (Prospera-backend) to initialize the deployment hooks._
+Backend Chat Endpoint:
+The AI Coach connects to the /api/chat route to send financial data and receive localized smart advice.
 
-_Input the following structural properties to frame the build environment pipeline correctly:_ _
+>📝 Developer Testing Tip
+_To save you time during testing, app.js has a developer bypass block. It auto-fills the form with demo details and skips directly to the active dashboard within 300ms of page load._
 
-_Runtime System Profile:_ Node
+```
+// ========================================================
+// DEVELOPER AUTOMATION: AUTO-FILL & BYPASS FORM ON REFRESH
+// ========================================================
+(function() {
+    function autoFillAndBypass() {
+        // Checking if data is already filled to prevent infinite loop
+        if (window.hasCalculatedDataBefore) return;
 
-_Build Pipeline Routine:_ npm install
+        console.log("⚡ Dev Automation Active: Auto-filling form fields...");
 
-_Start Execution Instruction:_ node server.js
+        // Targeting form fields securely
+        const nameField = document.getElementById('prof-name');
+        const ageField = document.getElementById('prof-age');
+        const jobField = document.getElementById('prof-job');
+        const incomeField = document.getElementById('prof-income');
+        const expensesField = document.getElementById('prof-expenses');
+        const savingsField = document.getElementById('prof-savings');
+        const goalField = document.getElementById('prof-goal');
+        const targetField = document.getElementById('prof-target');
+        const timelineField = document.getElementById('prof-timeline');
 
-_Inject the secure credential values inside the Environment Variables configuration blade using the explicit key mapping name:_ GEMINI_API_KEY.
+        // If inputs exist on the current screen, fill them with simple test data
+        if (nameField && incomeField && targetField) {
+            nameField.value = "Aritra Mondal";
+            ageField.value = "22";
+            jobField.value = "Cybersecurity Expert";
+            incomeField.value = "100000";
+            expensesField.value = "40000";
+            savingsField.value = "50000";
+            
+            // Selecting goal and target values
+            goalField.value = "Buy House"; 
+            targetField.value = "2000000"; 
+            timelineField.value = "36"; 
 
-_Select the deployment trigger to instantly compile your secure, production-grade cloud container array._
+            // Setting up the risk radio button profile style
+            const medRisk = document.querySelector('input[name="risk"][value="Medium"]');
+            if (medRisk) medRisk.checked = true;
 
-# Author
-[@Aritra](https://github.com/ArixenX)
+            // Mock profile object configuration for calculation engine
+            window.userFinancialProfile = {
+                name: "Aritra Mondal", age: 22, job: "Cybersecurity Expert",
+                income: 100000, expenses: 40000, savings: 50000, loans: 0,
+                goal: "Buy House", target: 2000000, timeline: 36, risk: "Medium"
+            };
+
+            window.hasCalculatedDataBefore = true;
+
+            // Triggering the built-in mathematical processing rules
+            if (typeof computeFinancialAnalytics === 'function') {
+                computeFinancialAnalytics();
+            }
+            
+            // Snappy navigation switch redirecting straight to dashboard tab view
+            if (typeof navigateTo === 'function') {
+                navigateTo('dashboard');
+            }
+            console.log("🎯 Successfully entered Dashboard automatically!");
+        }
+    }
+
+    // Runs exactly after 300ms of page load as described in README
+    window.addEventListener('load', () => {
+        setTimeout(autoFillAndBypass, 300);
+    });
+})();
+```
+(Remember to remove or comment out this automated block from the bottom of app.js before submitting your final project to real users!)
