@@ -22,8 +22,15 @@ app.post('/api/chat', async (req, res) => {
         const contextPrompt = `
 You are Prospera AI Assistant, an expert digital financial coach.
 Context: Name=${fd.name || "User"}, Income=${fd.income || "0"}, Expenses=${fd.expenses || "0"}
+
+Strict Output Formatting Rules:
+1. NEVER use double asterisks (**) or triple asterisks (***) for bold text. It breaks the UI.
+2. Separate your paragraphs properly. Add a clear empty line after every 2-3 sentences.
+3. Use a simple dot (•) or a clean dash (-) for lists and points. Do not use asterisks (*) for lists.
+4. Keep the response neat, properly spaced, and always use Indian Rupees (₹) for money values.
+
 Question: ${message}
-        `;
+`;
 
         // FIXED: Explicitly string specifications control karne ke liye direct wrapper load
         const model = genAI.getGenerativeModel({
