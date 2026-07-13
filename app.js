@@ -191,7 +191,7 @@ function toggleThemeMode() {
         body.classList.add('dark-mode');
         themeIcon.setAttribute('data-lucide', 'sun');
     }
-    
+
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
     }
@@ -208,15 +208,15 @@ function navigateTo(pageId) {
     });
 
     const targetPage = document.getElementById(pageId);
-    if(targetPage) {
+    if (targetPage) {
         targetPage.classList.add('active');
         targetPage.style.display = 'block';
-        
+
         if (pageId === 'dashboard') {
             handleDashboardViewInitialization();
         } else {
             targetPage.classList.remove('animate-fade-in-up');
-            void targetPage.offsetWidth; 
+            void targetPage.offsetWidth;
             targetPage.classList.add('animate-fade-in-up');
         }
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -228,10 +228,10 @@ function navigateTo(pageId) {
     if (pageId === 'coach') {
         document.body.style.overflow = 'hidden';
         document.body.style.height = '100vh';
-        
+
         setTimeout(() => {
             const chatBox = document.getElementById('chat-box');
-            if(chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+            if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
         }, 50);
     } else {
         document.body.style.overflow = 'auto';
@@ -278,7 +278,7 @@ function handleDashboardViewInitialization() {
     } else {
         if (emptyStateLayer) emptyStateLayer.classList.add('hidden');
         if (activeContentLayer) activeContentLayer.classList.remove('hidden');
-        
+
         const p = userFinancialProfile;
         const optimalSavings = Math.floor(Math.max(0, p.income - p.expenses - p.loans) * 0.80);
         renderCharts(p.income, p.expenses, optimalSavings, p.target, p.timeline);
@@ -286,8 +286,9 @@ function handleDashboardViewInitialization() {
 }
 
 function generateRoadmap(event) {
-    event.preventDefault();
+    if (event) event.preventDefault();
 
+    // 1. Data collection from input elements cleanly
     userFinancialProfile.name = document.getElementById('prof-name').value;
     userFinancialProfile.age = parseInt(document.getElementById('prof-age').value);
     userFinancialProfile.job = document.getElementById('prof-job').value;
@@ -302,69 +303,206 @@ function generateRoadmap(event) {
 
     hasCalculatedDataBefore = true;
 
-    document.getElementById('profile').classList.remove('active');
-    document.getElementById('profile').style.display = 'none';
-    
-    const loadingScreen = document.getElementById('loading-screen');
-    loadingScreen.classList.remove('hidden');
-    loadingScreen.classList.add('flex');
+    // 2. Hide input page instantly
+    const profilePage = document.getElementById('profile');
+    if (profilePage) {
+        profilePage.classList.remove('active');
+        profilePage.style.display = 'none';
+    }
 
+    // 3. Show loading spinner instantly
+    const loadingScreen = document.getElementById('loading-screen');
+    if (loadingScreen) {
+        loadingScreen.classList.remove('hidden');
+        loadingScreen.classList.add('flex');
+    }
+
+    // 4. Run mathematical logic immediately in background
+    computeFinancialAnalytics();
+
+    // 5. Shortened Delay (400ms) for ultra-fast, snappy dynamic transition
     setTimeout(() => {
+        if (loadingScreen) {
+            loadingScreen.classList.add('hidden');
+            loadingScreen.classList.remove('flex');
+        }
+        navigateTo('dashboard');
+    }, 400);
+}
+
+// Global Navigation Function Fix to clear stray loading screens
+function navigateTo(pageId) {
+    // SECURITY GUARD: Agar loader chal raha hai, toh use turant band karo
+    const loadingScreen = document.getElementById('loading-screen');
+    if (loadingScreen) {
         loadingScreen.classList.add('hidden');
         loadingScreen.classList.remove('flex');
-        computeFinancialAnalytics();
-        navigateTo('dashboard');
-    }, 1800);
+    }
+
+    // 1. ALL PAGES ARRAY (Landing page text configuration included)
+    const pages = ['landing', 'profile', 'dashboard', 'coach'];
+
+    pages.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.classList.remove('active');
+            el.style.display = 'none';
+        }
+    });
+
+    // 2. Activate target page safely
+    const targetPage = document.getElementById(pageId);
+    if (targetPage) {
+        targetPage.classList.add('active');
+        targetPage.style.display = 'block';
+
+        // Dynamic chart execution hook when entering dashboard
+        if (pageId === 'dashboard') {
+            handleDashboardViewInitialization();
+        } else {
+            targetPage.classList.remove('animate-fade-in-up');
+            void targetPage.offsetWidth;
+            targetPage.classList.add('animate-fade-in-up');
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 3. FIX: Navbar Active Links Styling Update
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('nav-active');
+    });
+
+    const activeDesktopBtn = document.getElementById(`nav-desktop-${pageId}`);
+    if (activeDesktopBtn) activeDesktopBtn.classList.add('nav-active');
+
+    // 4. Handle body scroll for Coach view wrapper context
+    if (pageId === 'coach') {
+        document.body.style.overflow = 'hidden';
+        document.body.style.height = '100vh';
+        setTimeout(() => {
+            const chatBox = document.getElementById('chat-box');
+            if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+        }, 50);
+    } else {
+        document.body.style.overflow = 'auto';
+        document.body.style.height = 'auto';
+    }
+
+    // Close hamburger menu overlay loop if open
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    if (hamburgerBtn && hamburgerBtn.classList.contains('open')) {
+        toggleMobileMenu();
+    }
+
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
 }
 
 function computeFinancialAnalytics() {
     const p = userFinancialProfile;
     const surplus = p.income - p.expenses - p.loans;
     const savingsRatio = p.income > 0 ? (surplus / p.income) : 0;
-    
+
     let score = 60 + Math.floor(savingsRatio * 40);
-    if(p.loans === 0) score += 5;
-    if(p.savings > p.expenses * 2) score += 5;
+    if (p.loans === 0) score += 5;
+    if (p.savings > p.expenses * 2) score += 5;
     score = Math.min(Math.max(score, 45), 98);
 
     document.getElementById('dash-user-name').innerText = p.name;
     document.getElementById('card-score').innerText = score;
     document.getElementById('card-score-progress').style.width = `${score}%`;
-    
+
     const optimalSavings = Math.floor(Math.max(0, surplus) * 0.80);
     document.getElementById('card-reco').innerText = `\u20B9${optimalSavings.toLocaleString('en-IN')}`;
     document.getElementById('card-risk').innerText = p.risk;
 
     const riskBadge = document.getElementById('card-risk-badge');
+    const emergencyBuffer = p.expenses * 3;
+
+    // 1. Calculate REAL growth path (Fact-based)
+    let finalProjectedPool = Number(p.savings) || 0;
+    const compoundingRate = p.risk === 'High' ? 1.012 : p.risk === 'Medium' ? 1.007 : 1.003;
+
+    for (let m = 0; m < p.timeline; m++) {
+        finalProjectedPool = (finalProjectedPool + optimalSavings) * compoundingRate;
+    }
+    finalProjectedPool = Math.floor(finalProjectedPool);
+
+    // 2. BACKWARD MATHEMATICS: Calculate EXACT monthly savings needed to hit target perfectly
+    // Formula: Required Monthly = (Target - Initial Savings * (Rate^Months)) / (Geometric Series Factor)
+    const totalRateFactor = Math.pow(compoundingRate, p.timeline);
+    const initialSavingsGrowth = (Number(p.savings) || 0) * totalRateFactor;
+
+    let geometricSeriesSum = 0;
+    for (let m = 0; m < p.timeline; m++) {
+        geometricSeriesSum += Math.pow(compoundingRate, m);
+    }
+
+    let requiredSavingsToHitTarget = optimalSavings;
+    if (geometricSeriesSum > 0 && p.target > initialSavingsGrowth) {
+        requiredSavingsToHitTarget = Math.ceil((p.target - initialSavingsGrowth) / geometricSeriesSum);
+    }
+
+    // Dynamic Months Calculation for Emergency Buffer Phase
+    const bufferMonths = optimalSavings > 0 ? Math.ceil(emergencyBuffer / optimalSavings) : 3;
+    const investStartMonth = bufferMonths + 1;
+
+    const isTargetAchieved = finalProjectedPool >= p.target;
+    const deficitAmount = p.target - finalProjectedPool;
+
+    // VERY SIMPLE LANGUAGE INJECTION WITH AI SOLUTION/ADVICE
     if (currentLanguage === 'hi') {
         document.getElementById('card-potential').innerText = `₹${Math.max(0, surplus).toLocaleString('en-IN')} बचे हुए पैसों में से`;
         riskBadge.innerText = p.risk === 'High' ? 'उच्च वृद्धि शैली' : p.risk === 'Medium' ? 'संतुलित योजना' : 'सुरक्षित बचत शैली';
-        
-        document.getElementById('timeline-p1').innerText = `एक मजबूत बैकअप फंड बनाने के लिए सुरक्षित बचत खाते में ₹${optimalSavings.toLocaleString('en-IN')}/महीना बचाएं।`;
-        document.getElementById('timeline-p2').innerText = `अपने ${p.risk} जोखिम पसंद के अनुसार मासिक बचत को म्यूचुअल फंड में डालना शुरू करें।`;
-        document.getElementById('timeline-p3').innerText = `अपनी बचत की गति बढ़ाने के लिए ब्याज को दोबारा निवेश करें और फालतू खर्चों से बचें।`;
-        document.getElementById('timeline-p4').innerText = `आपकी कुल बचत आपके मुख्य लक्ष्य ${p.goal} के ₹${p.target.toLocaleString('en-IN')} के बजट को सफलतापूर्वक प्राप्त कर लेगी।`;
+
+        document.getElementById('timeline-p1').innerText = `शुरुआती बैकअप फंड के लिए हर महीने ₹${optimalSavings.toLocaleString('en-IN')} सुरक्षित खाते में रखें।`;
+        document.getElementById('timeline-p2').innerText = `बाकी बचे समय में अपनी चुनी हुई निवेश शैली (${p.risk}) के हिसाब से पैसे इन्वेस्ट करना शुरू करें।`;
+        document.getElementById('timeline-p3').innerText = `अपने पैसों को बढ़ते रहने दें और फिजूलखर्च बंद करें ताकि पैसा जल्दी डबल हो सके।`;
+
+        if (isTargetAchieved) {
+            document.getElementById('timeline-p4').innerText = `बधाई हो! आपकी वर्तमान बचत से आपका ₹${p.target.toLocaleString('en-IN')} का लक्ष्य आसानी से पूरा हो जाएगा।`;
+        } else {
+            document.getElementById('timeline-p4').innerText = `सच्चाई: आप ₹${finalProjectedPool.toLocaleString('en-IN')} तक पहुंचेंगे (₹${deficitAmount.toLocaleString('en-IN')} कम पड़ेंगे)। AI सलाह: लक्ष्य छूने के लिए बचत को बढ़ाकर ₹${requiredSavingsToHitTarget.toLocaleString('en-IN')}/महीना करें।`;
+        }
     } else if (currentLanguage === 'bn') {
         document.getElementById('card-potential').innerText = `\u20B9${Math.max(0, surplus).toLocaleString('en-IN')} মোট অবশিষ্ট টাকা থেকে`;
         riskBadge.innerText = p.risk === 'High' ? 'উচ্চ প্রবৃদ্ধি শৈলী' : p.risk === 'Medium' ? 'ভারসাম্যপূর্ণ শৈলী' : 'নিরাপদ সঞ্চয় শৈলী';
 
-        document.getElementById('timeline-p1').innerText = `একটি গোপন তহবিল তৈরি করতে নিরাপদ সেভিংস অ্যাকাউন্টে ₹${optimalSavings.toLocaleString('en-IN')}/মাস বাঁচান।`;
-        document.getElementById('timeline-p2').innerText = `আপনাদের ${p.risk} ঝুঁকির পছন্দ অনুযায়ী মাসিক সঞ্চয় মিউচুয়াল ফান্ডে দেওয়া শুরু করুন।`;
-        document.getElementById('timeline-p3').innerText = `গতি বােলার জন্য রিটার্ন পুনরায় বিনিয়োগ করুন এবং অতিরিক্ত খরচ এড়িয়ে চলুন।`;
-        document.getElementById('timeline-p4').innerText = `আপনার মোট সঞ্চিত তহবিল আপনার প্রধান লক্ষ্য ${p.goal} এর জন্য ₹${p.target.toLocaleString('en-IN')} এর বাজেট সফলভাবে স্পর্শ করবে।`;
+        document.getElementById('timeline-p1').innerText = `ব্যাকআপ ফান্ডের জন্য প্রতি মাসে ₹${optimalSavings.toLocaleString('en-IN')} সেভিংস অ্যাকাউন্টে জমান।`;
+        document.getElementById('timeline-p2').innerText = `আপনার ${p.risk} রিস্ক প্রোফাইল অনুযায়ী সঠিক জায়গায় টাকা বিনিয়োগ বা ইনভেস্ট করা শুরু করুন।`;
+        document.getElementById('timeline-p3').innerText = `টাকা বাড়ানোর জন্য রিটার্ন আবার ইনভেস্ট করুন এবং ফালতু খরচ কমান।`;
+
+        if (isTargetAchieved) {
+            document.getElementById('timeline-p4').innerText = `অভিনন্দন! আপনার বর্তমান জমানো টাকা দিয়ে ₹${p.target.toLocaleString('en-IN')} এর লক্ষ্য সহজেই পূরণ হয়ে যাবে।`;
+        } else {
+            document.getElementById('timeline-p4').innerText = `বাস্তব চিত্র: আপনি ₹${finalProjectedPool.toLocaleString('en-IN')} পর্যন্ত পৌঁছাবেন (₹${deficitAmount.toLocaleString('en-IN')} কম পড়বে)। AI পরামর্শ: লক্ষ্য ছুঁতে সঞ্চয় বাড়িয়ে ₹${requiredSavingsToHitTarget.toLocaleString('en-IN')}/মাস করুন।`;
+        }
     } else {
         document.getElementById('card-potential').innerText = `Out of \u20B9${Math.max(0, surplus).toLocaleString('en-IN')} total monthly leftover cash`;
         riskBadge.innerText = p.risk === 'High' ? 'Aggressive Growth Plan' : p.risk === 'Medium' ? 'Balanced Plan' : 'Capital Preservation Plan';
 
-        document.getElementById('timeline-p1').innerText = `Save \u20B9${optimalSavings.toLocaleString('en-IN')}/month into secure liquid funds to build your initial emergency fund cushion.`;
-        document.getElementById('timeline-p2').innerText = `Direct your monthly savings into diversified portfolios matching your balanced ${p.risk} style preference.`;
-        document.getElementById('timeline-p3').innerText = `Reinvest returns automatically and avoid variable budget leaks to increase compounding growth speed.`;
-        document.getElementById('timeline-p4').innerText = `Your total accumulated pool fully completes your \u20B9${p.target.toLocaleString('en-IN')} budget for your ${p.goal}.`;
+        document.getElementById('timeline-p1').innerText = `Save ₹${optimalSavings.toLocaleString('en-IN')}/month in a safe place until your backup fund is ready.`;
+        document.getElementById('timeline-p2').innerText = `Start investing your monthly savings safely based on your chosen ${p.risk} style preference.`;
+        document.getElementById('timeline-p3').innerText = `Let your money compound automatically and avoid unnecessary daily spending.`;
+
+        if (isTargetAchieved) {
+            document.getElementById('timeline-p4').innerText = `Success! Your accumulated money fully covers your ₹${p.target.toLocaleString('en-IN')} goal budget for ${p.goal}.`;
+        } else {
+            document.getElementById('timeline-p4').innerText = `Reality: You will reach ₹${finalProjectedPool.toLocaleString('en-IN')} (Short by ₹${deficitAmount.toLocaleString('en-IN')}). AI Advice: To hit your goal on time, increase monthly savings to ₹${requiredSavingsToHitTarget.toLocaleString('en-IN')}/month.`;
+        }
     }
 
-    if(p.risk === 'High') {
+    // Direct Element Selection Fix for Timeline Headers
+    const p1Headers = [document.querySelector('[data-lang-key="p1_timeline"]'), document.getElementById('timeline-p1-title')];
+    const p2Headers = [document.querySelector('[data-lang-key="p2_timeline"]'), document.getElementById('timeline-p2-title')];
+
+    p1Headers.forEach(el => { if (el) el.innerText = `Months 1–${bufferMonths}`; });
+    p2Headers.forEach(el => { if (el) el.innerText = `Months ${investStartMonth}–12`; });
+
+    if (p.risk === 'High') {
         riskBadge.className = "text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-rose-50 text-rose-600 border border-rose-100 inline-block";
-    } else if(p.risk === 'Low') {
+    } else if (p.risk === 'Low') {
         riskBadge.className = "text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-50 text-blue-600 border border-blue-100 inline-block";
     } else {
         riskBadge.className = "text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-50 text-amber-600 border border-amber-100 inline-block";
@@ -372,11 +510,11 @@ function computeFinancialAnalytics() {
 
     const checklistContainer = document.getElementById('priority-checklist');
     checklistContainer.innerHTML = `
-        <div class="flex items-start space-x-2 text-xs"><input type="checkbox" checked class="rounded text-blue-500 mt-0.5"> <span class="text-gray-600 font-medium">${currentLanguage === 'hi' ? 'इमरजेंसी फंड अलग रखें:' : currentLanguage === 'bn' ? 'জরুরি তহবিল আলাদা রাখুন:' : 'Emergency Buffer Fund:'} ₹${(p.expenses * 3).toLocaleString('en-IN')}</span></div>
-        <div class="flex items-start space-x-2 text-xs"><input type="checkbox" class="rounded text-blue-500 mt-0.5"> <span class="text-gray-600 font-medium">${currentLanguage === 'hi' ? 'मासिक ऑटो-ट्रांसफर सेट करें:' : currentLanguage === 'bn' ? 'মাসিক অটো-ট্রান্সফার সেট করুন:' : 'Set Up Automated Monthly Savings Transfer:'} ₹${optimalSavings.toLocaleString('en-IN')}</span></div>
+        <div class="flex items-start space-x-2 text-xfs"><input type="checkbox" checked class="rounded text-blue-500 mt-0.5"> <span class="text-gray-600 font-medium">${currentLanguage === 'hi' ? 'इमरजेंसी फंड अलग रखें:' : currentLanguage === 'bn' ? 'জরুরি তহবিল আলাদা রাখুন:' : 'Emergency Buffer Fund:'} ₹${emergencyBuffer.toLocaleString('en-IN')}</span></div>
+        <div class="flex items-start space-x-2 text-xs"><input type="checkbox" class="rounded text-blue-500 mt-0.5"> <span class="text-gray-600 font-medium">${currentLanguage === 'hi' ? 'मासिक ऑटो-ट्रांसфер सेट करें:' : currentLanguage === 'bn' ? 'মাসিক অটো-ট্রান্সফার সেট করুন:' : 'Set Up Automated Monthly Savings Transfer:'} ₹${optimalSavings.toLocaleString('en-IN')}</span></div>
     `;
 
-    renderCharts(p.income, p.expenses, optimalSavings, p.target, p.timeline);
+    renderCharts(p.income, p.expenses, p.optimalSavings, p.target, p.timeline);
 }
 
 function renderCharts(income, expenses, savingsContribution, targetAmount, timelineMonths) {
@@ -386,7 +524,7 @@ function renderCharts(income, expenses, savingsContribution, targetAmount, timel
     if (activeCharts.projection) activeCharts.projection.destroy();
 
     const ctxProj = projCanvas.getContext('2d');
-    
+
     const dynamicGradientFill = ctxProj.createLinearGradient(0, 0, 0, 240);
     dynamicGradientFill.addColorStop(0, 'rgba(10, 132, 255, 0.22)');
     dynamicGradientFill.addColorStop(1, 'rgba(10, 132, 255, 0.00)');
@@ -394,7 +532,7 @@ function renderCharts(income, expenses, savingsContribution, targetAmount, timel
     const trackingLabels = [];
     const trajectoryData = [];
     const baselineTargetData = [];
-    
+
     let poolValue = Number(userFinancialProfile.savings) || 0;
     const compoundingRate = userFinancialProfile.risk === 'High' ? 1.012 : userFinancialProfile.risk === 'Medium' ? 1.007 : 1.003;
     const trackingSteps = 6;
@@ -402,8 +540,8 @@ function renderCharts(income, expenses, savingsContribution, targetAmount, timel
 
     for (let currentStep = 0; currentStep < trackingSteps; currentStep++) {
         let currentMonth = currentStep * intervalMonths;
-        if (currentStep === trackingSteps - 1) currentMonth = timelineMonths; 
-        
+        if (currentStep === trackingSteps - 1) currentMonth = timelineMonths;
+
         trackingLabels.push(`${currentLanguage === 'hi' ? 'महीना' : currentLanguage === 'bn' ? 'মাস' : 'Month'} ${currentMonth}`);
         trajectoryData.push(Math.floor(poolValue));
         baselineTargetData.push(targetAmount);
@@ -413,57 +551,78 @@ function renderCharts(income, expenses, savingsContribution, targetAmount, timel
         }
     }
 
+    // AUTO SCALE FIX: Ensure graph Y-axis spans to comfortably fit the Target Line
+    const maxValInGraph = Math.max(...trajectoryData, targetAmount);
+
     activeCharts.projection = new Chart(ctxProj, {
         type: 'line',
         data: {
             labels: trackingLabels,
             datasets: [
-                { 
-                    label: currentLanguage === 'hi' ? 'अनुमानित धन वृद्धि' : currentLanguage === 'bn' ? 'অনুমিত সম্পদ বৃদ্ধি' : 'Projected Wealth Growth', 
-                    data: trajectoryData, 
-                    borderColor: '#0A84FF', 
-                    backgroundColor: dynamicGradientFill, 
-                    fill: true, 
-                    tension: 0.35, 
-                    borderWidth: 3, 
+                {
+                    label: currentLanguage === 'hi' ? 'अनुमानित धन वृद्धि' : currentLanguage === 'bn' ? 'অনুমিত সম্পদ বৃদ্ধি' : 'Projected Wealth Growth',
+                    data: trajectoryData,
+                    borderColor: '#0A84FF',
+                    backgroundColor: dynamicGradientFill,
+                    fill: true,
+                    tension: 0.35,
+                    borderWidth: 3,
                     pointRadius: 4,
                     pointBackgroundColor: '#0A84FF',
                     pointBorderColor: '#ffffff',
                     pointBorderWidth: 1.5,
                     pointHoverRadius: 6
                 },
-                { 
-                    label: currentLanguage === 'hi' ? 'लक्ष्य बजट सीमा रेखा' : currentLanguage === 'bn' ? 'লক্ষ্য বাজেট রেখা' : 'Target Goal Budget', 
-                    data: baselineTargetData, 
-                    borderColor: '#ef4444', 
-                    borderDash: [5, 5], 
-                    pointRadius: 0, 
-                    borderWidth: 1.5 
+                {
+                    label: currentLanguage === 'hi' ? 'लक्ष्य बजट सीमा रेखा' : currentLanguage === 'bn' ? 'লক্ষ্য বাজেট রেখা' : 'Target Goal Budget',
+                    data: baselineTargetData,
+                    borderColor: '#ef4444',
+                    borderDash: [5, 5],
+                    pointRadius: 0,
+                    borderWidth: 1.5
                 }
             ]
         },
-        options: { 
-            responsive: true, 
-            maintainAspectRatio: false, 
-            plugins: { 
-                legend: { 
-                    display: true, 
-                    position: 'top', 
-                    labels: { boxWidth: 10, font: { size: 10, weight: '700' } } 
-                } 
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: { boxWidth: 10, font: { size: 10, weight: '700' } }
+                },
+                // FIXED TOOLTIP: Dynamic formatting allowing hover logic over BOTH lines flawlessly
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    callbacks: {
+                        label: function (context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(context.parsed.y);
+                            }
+                            return label;
+                        }
+                    }
+                }
             },
-            scales: { 
-                y: { 
+            scales: {
+                y: {
                     grid: { color: 'rgba(148, 163, 184, 0.05)' },
+                    max: Math.ceil(maxValInGraph * 1.05), // Adds 5% head padding above target for clean display
                     ticks: {
                         font: { size: 9, weight: '600' },
-                        callback: function(v) { return '₹' + v.toLocaleString('en-IN'); }
+                        callback: function (v) { return '₹' + v.toLocaleString('en-IN'); }
                     }
-                }, 
-                x: { 
+                },
+                x: {
                     grid: { display: false },
                     ticks: { font: { size: 9, weight: '600' } }
-                } 
+                }
             }
         }
     });
@@ -472,13 +631,13 @@ function renderCharts(income, expenses, savingsContribution, targetAmount, timel
 function initializeTooltipFramework() {
     const tooltipBox = document.getElementById('global-tooltip');
     if (!tooltipBox) return;
-    
+
     document.querySelectorAll('.tooltip-trigger').forEach(trigger => {
         const handleShow = () => {
             const dataText = trigger.getAttribute('data-tip');
             tooltipBox.innerText = dataText;
             tooltipBox.classList.add('visible');
-            
+
             const coordinates = trigger.getBoundingClientRect();
             tooltipBox.style.top = `${coordinates.top + window.scrollY - tooltipBox.offsetHeight - 10}px`;
             tooltipBox.style.left = `${coordinates.left + window.scrollX - (tooltipBox.offsetWidth / 2) + 9}px`;
@@ -502,25 +661,38 @@ function initializeTooltipFramework() {
 }
 
 // Fixed Chat Bubble dynamic generation for Dark-Mode
+// Fixed Chat Bubble dynamic generation with Markdown Parsing
 function appendChatMessage(role, text) {
     const chatBox = document.getElementById('chat-box');
     if (!chatBox) return;
 
     const messageWrapper = document.createElement('div');
     messageWrapper.className = `flex items-start space-x-3 max-w-[85%] mb-4 ${role === 'user' ? 'ml-auto flex-row-reverse space-x-reverse' : ''}`;
-    
+
     const tag = role === 'user' ? 'ME' : 'AI';
-    const bubbleStyle = role === 'user' 
-        ? "bg-gray-100 border border-gray-200 text-gray-900 dark-mode-user-msg" 
+    const bubbleStyle = role === 'user'
+        ? "bg-gray-100 border border-gray-200 text-gray-900 dark-mode-user-msg"
         : "bg-white border border-gray-100 text-gray-800 dark-mode-ai-msg";
+
+    // Standard Clean Markdown to HTML Converter (No Jugad, Proper logic)
+    let formattedText = text;
+    if (role === 'ai') {
+        formattedText = text
+            // 1. Double asterisks (**text**) ko strong/bold tag me badlo
+            .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-gray-900 dark:text-white">$1</strong>')
+            // 2. Single asterisks (*) ya bullets (•) ko clear new list item gaps me badlo
+            .replace(/[•*]\s(.*)/g, '<span class="block pl-4 my-1">• $1</span>')
+            // 3. Naye lines (\n) ko HTML break tags me convert karo properly
+            .replace(/\n/g, '<br>');
+    }
 
     messageWrapper.innerHTML = `
         <div class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 text-[10px] font-bold ${role === 'user' ? 'bg-blue-100 text-[#0A84FF]' : 'bg-slate-200 text-slate-700'}">${tag}</div>
         <div class="p-4 rounded-2xl text-sm leading-relaxed ${bubbleStyle} chat-message-bubble">
-            <p>${text}</p>
+            <div>${formattedText}</div>
         </div>
     `;
-    
+
     chatBox.appendChild(messageWrapper);
     chatBox.scrollTop = chatBox.scrollHeight;
 }
@@ -528,7 +700,7 @@ function appendChatMessage(role, text) {
 function appendChatLoadingIndicator(id) {
     const chatBox = document.getElementById('chat-box');
     if (!chatBox) return;
-    
+
     const loader = document.createElement('div');
     loader.id = id;
     loader.className = "flex items-center space-x-2 text-gray-400 text-xs pl-11 mb-4";
@@ -562,14 +734,15 @@ async function submitChat(event) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                message: text,
-                financialData: userFinancialProfile 
+                // Humne message ke sath instructions attach kar diye hain
+                message: text + " (Provide the response strictly in Indian Rupees ₹ and formatted with clean markdown bullet points)",
+                financialData: userFinancialProfile
             })
         });
 
         const data = await response.json();
         removeChatLoadingIndicator(id);
-        
+
         if (data.reply) {
             appendChatMessage('ai', data.reply);
         } else {
@@ -592,14 +765,14 @@ async function submitSuggestedQuestion(questionText) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                message: questionText,
+                message: questionText + " (Provide the response strictly in Indian Rupees ₹ and formatted with clean markdown bullet points)",
                 financialData: userFinancialProfile
             })
         });
 
         const data = await response.json();
         removeChatLoadingIndicator(id);
-        
+
         if (data.reply) {
             appendChatMessage('ai', data.reply);
         }
@@ -616,3 +789,113 @@ window.addEventListener('DOMContentLoaded', () => {
     initializeTooltipFramework();
     navigateTo('landing');
 });
+
+// ==========================================
+// STRICT CORE FORM VALIDATION LAYER (FIXED RED WARNINGS)
+// ==========================================
+
+// 1. DYNAMIC AGE WARNING GUARD
+const ageInputEl = document.getElementById('prof-age');
+if (ageInputEl) {
+    const errorDisplay = document.createElement('p');
+    errorDisplay.id = 'age-warning-msg';
+    errorDisplay.className = 'text-xs mt-1 hidden font-semibold';
+    // Strict Inline Color (Light & Dark Mode bypass)
+    errorDisplay.style.color = '#ef4444';
+    errorDisplay.innerText = 'Please enter a value between 10 and 110';
+    ageInputEl.parentNode.appendChild(errorDisplay);
+
+    ageInputEl.addEventListener('input', function (e) {
+        const age = parseInt(e.target.value, 10);
+        if (e.target.value !== "" && (isNaN(age) || age < 10 || age > 110)) {
+            errorDisplay.classList.remove('hidden');
+            ageInputEl.style.borderColor = '#ef4444';
+        } else {
+            errorDisplay.classList.add('hidden');
+            ageInputEl.style.removeProperty('border-color');
+        }
+    });
+
+    ageInputEl.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            const age = parseInt(e.target.value, 10);
+            if (isNaN(age) || age < 10 || age > 110) {
+                e.preventDefault();
+                errorDisplay.classList.remove('hidden');
+                ageInputEl.focus();
+            }
+        }
+    });
+}
+
+// 2. DYNAMIC OCCUPATION/JOB GUARD (NO SPACES AT ALL)
+const jobInputEl = document.getElementById('prof-job');
+if (jobInputEl) {
+    const errorDisplay = document.createElement('p');
+    errorDisplay.id = 'job-warning-msg';
+    errorDisplay.className = 'text-xs mt-1 hidden font-semibold';
+    // Strict Inline Color (Light & Dark Mode bypass)
+    errorDisplay.style.color = '#ef4444';
+    errorDisplay.innerText = 'Only letters are allowed (no spaces)';
+    jobInputEl.parentNode.appendChild(errorDisplay);
+
+    jobInputEl.addEventListener('keypress', function (e) {
+        const regex = /^[A-Za-z]+$/;
+        if (!regex.test(e.key) || e.key === ' ') {
+            e.preventDefault();
+            errorDisplay.classList.remove('hidden');
+            jobInputEl.style.borderColor = '#ef4444';
+        }
+    });
+
+    jobInputEl.addEventListener('input', function (e) {
+        const regex = /^[A-Za-z]*$/;
+        if (!regex.test(e.target.value)) {
+            errorDisplay.classList.remove('hidden');
+            jobInputEl.style.borderColor = '#ef4444';
+        } else {
+            errorDisplay.classList.add('hidden');
+            jobInputEl.style.removeProperty('border-color');
+        }
+    });
+}
+
+// 3. DYNAMIC NAME GUARD (NO LEADING SPACES)
+const nameInputEl = document.getElementById('prof-name');
+if (nameInputEl) {
+    const errorDisplay = document.createElement('p');
+    errorDisplay.id = 'name-warning-msg';
+    errorDisplay.className = 'text-xs mt-1 hidden font-semibold';
+    // Strict Inline Color (Light & Dark Mode bypass)
+    errorDisplay.style.color = '#ef4444';
+    errorDisplay.innerText = 'Only letters and spaces allowed (cannot start with a space)';
+    nameInputEl.parentNode.appendChild(errorDisplay);
+
+    nameInputEl.addEventListener('keypress', function (e) {
+        const currentLength = e.target.value.length;
+        if (currentLength === 0 && e.key === ' ') {
+            e.preventDefault();
+            errorDisplay.classList.remove('hidden');
+            nameInputEl.style.borderColor = '#ef4444';
+            return;
+        }
+        const regex = /^[A-Za-z\s]+$/;
+        if (!regex.test(e.key)) {
+            e.preventDefault();
+            errorDisplay.classList.remove('hidden');
+            nameInputEl.style.borderColor = '#ef4444';
+        }
+    });
+
+    nameInputEl.addEventListener('input', function (e) {
+        const value = e.target.value;
+        const regex = /^[A-Za-z\s]*$/;
+        if (value.startsWith(' ') || !regex.test(value)) {
+            errorDisplay.classList.remove('hidden');
+            nameInputEl.style.borderColor = '#ef4444';
+        } else {
+            errorDisplay.classList.add('hidden');
+            nameInputEl.style.removeProperty('border-color');
+        }
+    });
+}
